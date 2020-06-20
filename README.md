@@ -1,2 +1,2 @@
-# Collection of sample assignments and solution.
+# Collection of sample numerical methods.
 Written in python.
