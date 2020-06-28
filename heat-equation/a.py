@@ -45,10 +45,12 @@ def solve_lp_rect(boundary_conds: tuple, Lx, Ly, \
     acc = np.inf
     n = 0
     while (acc >= accuracy):
-        new_data_mat = __func_iter(data_mat, del_x, del_y)
-        acc = np.max(np.abs(new_data_mat - data_mat))
+        # new_data_mat = __func_iter(data_mat, del_x, del_y)
+        prev_data_mat = np.copy(data_mat)
+        data_mat[1:-1, 1:-1] = \
+                 0.25*(data_mat[:-2, 1:-1] + data_mat[2:, 1:-1] + data_mat[1:-1, :-2] + data_mat[1:-1, 2:])
+        acc = np.max(np.abs(data_mat - prev_data_mat))
         print("Done: {:.2} (iter: {})    ".format(accuracy/acc, n), end='\r')
-        data_mat = new_data_mat
         n += 1
 
     return data_mat
@@ -58,10 +60,14 @@ Lx = 100
 Ly = 50
 u_x0 = u_x_ly = lambda x: 10 * np.cos(2 * np.pi * x / Lx)
 u_y0 = u_y_lx = lambda y: 10 * np.cos(2 * np.pi * y / Ly)
+
+u_x0 = lambda x: 10
+u_x_ly = u_y0 = u_y_lx = lambda y: 0
 boundary_conds = [u_x0, u_x_ly, u_y0, u_y_lx]
-del_x = 1
-del_y = 1
-accuracy = 1E-4
+
+del_x = 0.5
+del_y = 0.5
+accuracy = 1E-8
 data_mat = solve_lp_rect(boundary_conds, Lx, Ly, \
         del_x, del_y, accuracy)
 
@@ -75,4 +81,4 @@ plt.title("Laplace eqn in rectangular form.")
 plt.gca().xaxis.tick_bottom()
 plt.gca().invert_yaxis()
 print("\nsaved to: plot.pdf")
-plt.savefig('plot.pdf')
+plt.savefig('plot_high_acc.pdf')
