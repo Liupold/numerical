@@ -1,5 +1,6 @@
 #!/usr/bin/python3
-import scipy; import numpy as np
+import scipy
+import numpy as np
 # Name of the student: Rohn Chatterjee
 # integral (a)
 
@@ -8,22 +9,29 @@ from scipy.integrate import quad
 
 # function parameter and function definition
 alpha = 0.5
-f1 = lambda x: np.exp(-alpha * (x ** 2))
-f2 = lambda x: x * np.exp(-alpha * (x ** 2))
+def f1(x): return np.exp(-alpha * (x ** 2))
+def f2(x): return x * np.exp(-alpha * (x ** 2))
 
 # Fourier Transform
-def cquad (f, a, b, **kargs):
+
+
+def cquad(f, a, b, **kargs):
     return quad(lambda x: np.real(f(x)), a, b)[0] + \
-            1j * quad(lambda x: np.imag(f(x)), a, b)[0]
+        1j * quad(lambda x: np.imag(f(x)), a, b)[0]
+
 
 FT_factor = 1 / np.sqrt(2 * np.pi)
-FT = lambda f: lambda s: FT_factor * cquad(lambda x: f(x) * np.exp(1j * s * x), -np.inf, np.inf)
+
+
+def FT(f): return lambda s: FT_factor * \
+    cquad(lambda x: f(x) * np.exp(1j * s * x), -np.inf, np.inf)
+
 
 # Plotting
 s_range = np.arange(-10, 10, step=0.05)
 
-F1_s = [ FT(f1)(s) for s in s_range ]
-F2_s = [ FT(f2)(s) for s in s_range ]
+F1_s = [FT(f1)(s) for s in s_range]
+F2_s = [FT(f2)(s) for s in s_range]
 
 figure = plt.gcf()
 figure.set_size_inches(8.3, 11)

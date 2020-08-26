@@ -12,59 +12,73 @@ C = [(0), (0), (0)]
 
 # create A
 A = 2 * np.ones((2, 3))
-print("Matrix A:"); print(A)
+print("Matrix A:")
+print(A)
 
-#create B
+# create B
 B = 5 * np.eye(3)
-print("\nMatrix B:"); print(B)
+print("\nMatrix B:")
+print(B)
 
-#create C
+# create C
 C = np.zeros((3, 1))
-print("\nMatrix C:"); print(C)
+print("\nMatrix C:")
+print(C)
 
 # i) A . B
-print("\nA . B:"); print(np.dot(A, B))
+print("\nA . B:")
+print(np.dot(A, B))
 
 # ii) D
 D = np.vstack((A, np.transpose(C)))
-print("\nD:"); print(D)
+print("\nD:")
+print(D)
 
 # iii) E
 E = B * D
-print("\nE:"); print(E)
+print("\nE:")
+print(E)
 
 # iv) Replace col of E with C
 E[:, 1] = np.transpose(C)
-print("\nE (after col replaced):"); print(E)
+print("\nE (after col replaced):")
+print(E)
 
-################################################################################
+##########################################################################
 # b)
 print("-" * 30 + 'b' + '-' * 30)
 
 int_array = np.arange(100, 220, 10).reshape((6, 2))
-print("\nArray (6 x 2):"); print(int_array)
+print("\nArray (6 x 2):")
+print(int_array)
 
-print("\nSplited into 3"); \
-        print("1:\n{}\n2:\n{}\n3:\n{}\n".format(*np.split(int_array, 3)))
+print("\nSplited into 3")
+print("1:\n{}\n2:\n{}\n3:\n{}\n".format(*np.split(int_array, 3)))
 
 
-################################################################################
-#c)
+##########################################################################
+# c)
 print("-" * 30 + 'c' + '-' * 30)
 
-dagger = lambda x: np.transpose(np.conj(x))
+
+def dagger(x): return np.transpose(np.conj(x))
+
 
 arr = np.array([3, 2j, 6, 7, 4, 5j, 2, 6, 3]).reshape((3, 3))
-print("\nArray (3x3):"); print(arr)
+print("\nArray (3x3):")
+print(arr)
 
 M = (arr + dagger(arr)) / 2
 
-print("\nHermitian matrix(M) from Array (3x3):"); print(M)
+print("\nHermitian matrix(M) from Array (3x3):")
+print(M)
 print("\nM == M^H (Hermitian check)", (M == dagger(M)).all())
 
 U = np.linalg.qr(arr)[0]
-print("\nUnitary Matrix (U) from Array:"); print(U)
-print("\nU . U^H (Unitary check):"); print(np.round(np.dot(U, dagger(U)), 15))
+print("\nUnitary Matrix (U) from Array:")
+print(U)
+print("\nU . U^H (Unitary check):")
+print(np.round(np.dot(U, dagger(U)), 15))
 
 """
 OUTPUT:

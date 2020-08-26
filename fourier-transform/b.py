@@ -5,15 +5,25 @@ import numpy as np
 from scipy.integrate import quad
 
 # Given
-g = lambda x, mu, sigma: (1 / (sigma * np.sqrt(2 * np.pi))) * \
-                        np.exp(-0.5 * ((x - mu)/sigma)**2)
 
-mu = 2; sigma_set = [10, 1, 0.1, 0.01, 0.001]
 
-f = lambda x: x**2; a = -3
+def g(x, mu, sigma): return (1 / (sigma * np.sqrt(2 * np.pi))) * \
+    np.exp(-0.5 * ((x - mu) / sigma)**2)
 
-I = lambda sigma: quad(lambda x: g(x, mu, sigma) * f(x - a), \
-                        mu - 10 * sigma, mu + 10 * sigma)[0]
+
+mu = 2
+sigma_set = [10, 1, 0.1, 0.01, 0.001]
+
+
+def f(x): return x**2
+
+
+a = -3
+
+
+def I(sigma): return quad(lambda x: g(x, mu, sigma) * f(x - a),
+                          mu - 10 * sigma, mu + 10 * sigma)[0]
+
 
 print("f(mu - a) = {:.2E}".format(f(mu - a)))
 
@@ -24,8 +34,8 @@ for sigma in sigma_set:
  /
  | g(x, mu={}, sigma={})f(x - a={}) * dx  =  {:.2E}   (delta = {:.2E})
 _/
- {} """.format(mu - 10 * sigma, mu, sigma, a, ans, \
-         abs(ans - f(mu - a)), mu + 10 * sigma))
+ {} """.format(mu - 10 * sigma, mu, sigma, a, ans,
+               abs(ans - f(mu - a)), mu + 10 * sigma))
 
 """
 OUTPUT:

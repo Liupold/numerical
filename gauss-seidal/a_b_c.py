@@ -9,6 +9,7 @@ from itertools import permutations
 # B = np.array([6, 4, 0], dtype=float)
 # G = ""
 
+
 def solve_by_g_seidel(A, B, G=None, ACCURACY_UPTO=6):
     tol = 10 ** -(ACCURACY_UPTO + 1)
     N = len(A)
@@ -38,8 +39,8 @@ def solve_by_g_seidel(A, B, G=None, ACCURACY_UPTO=6):
         prev_guess = np.copy(guess_array)
         for i, row in enumerate(A):
             n = x_to_solve[i]
-            x_n = (B[i] - np.dot(np.delete(row, n), \
-                    np.delete(guess_array, n))) / row[n]
+            x_n = (B[i] - np.dot(np.delete(row, n),
+                                 np.delete(guess_array, n))) / row[n]
             guess_array[n] = x_n
         if (prev_guess == guess_array).all():
             break
@@ -56,19 +57,19 @@ def get_inv(A, G=None):
 
     for i, row in enumerate(ident):
         inv_matrix[:, i] = \
-                solve_by_g_seidel(A, row, G=G)
+            solve_by_g_seidel(A, row, G=G)
 
     return inv_matrix
 
 
 def pivot_sort(A, i):
     changed = False
-    col = list(A[:,i][i:])
+    col = list(A[:, i][i:])
     col = [abs(i) for i in col]
     swp_index = (col.index(max(col))) + i
     A[[i, swp_index]] = A[[swp_index, i]]
     if i != swp_index:
-        changed =True
+        changed = True
     return A, changed
 
 
@@ -91,6 +92,7 @@ def get_det(matrix, pcount):
     for i in range(N):
         det *= matrix[i][i]
     return det
+
 
 if __name__ == '__main__':
     A = np.array(eval(input("Input Matrix (A) of AX=B: ")), dtype=float)

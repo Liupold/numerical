@@ -3,8 +3,10 @@
 
 import numpy as np
 
+
 def VecNorm(vector: np.ndarray):
     return vector / np.linalg.norm(vector)
+
 
 def GramSchmit(Rn: np.ndarray):
     """
@@ -18,7 +20,7 @@ def GramSchmit(Rn: np.ndarray):
     for Vec_ in Rn:
         Vec = np.copy(Vec_)
         for qVec in VecSet:
-            Vec -= np.dot(Vec, qVec) * qVec # / np.linalg.norm(qVec)
+            Vec -= np.dot(Vec, qVec) * qVec  # / np.linalg.norm(qVec)
         Vec = VecNorm(Vec)
         VecSet.append(Vec)
 

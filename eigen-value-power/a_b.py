@@ -5,7 +5,7 @@ import sys
 
 
 def eigen_using_power(A, eigen_vec, accuracy=0.1):
-    check_array = lambda x: x if isinstance(x, np.ndarray) \
+    def check_array(x): return x if isinstance(x, np.ndarray) \
         else np.array(x, dtype=float)
     A = check_array(A)
     eigen_vec = check_array(eigen_vec)
@@ -17,9 +17,9 @@ def eigen_using_power(A, eigen_vec, accuracy=0.1):
         eigen_vec = np.dot(A, eigen_vec)
         new_eigen_val = max(eigen_vec)
         delta = abs(eigen_val - new_eigen_val) \
-                if eigen_val != np.inf else eigen_val # init on the 0th iter
+            if eigen_val != np.inf else eigen_val  # init on the 0th iter
         eigen_val = new_eigen_val
-        eigen_vec /= eigen_val # scaling
+        eigen_vec /= eigen_val  # scaling
         iter_count += 1
 
     return eigen_val, eigen_vec
@@ -37,7 +37,8 @@ if __name__ == "__main__":
         except OSError:
             A = np.array(eval(input_))
 
-        print("Recived Array:"); print(A)
+        print("Recived Array:")
+        print(A)
 
         X = eval(input("Enter eigen vec (initial): "))
         lambda_, Xn = eigen_using_power(A, X, accuracy=1E-15)

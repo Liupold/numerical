@@ -4,16 +4,19 @@
 import numpy as np
 import inspect
 
+
 def partial(f, X, var, h=1E-15):
     f_x = f(*X)
     X[var] += h
     f_x_h = f(*X)
     return (f_x_h - f_x) / h
 
+
 def Jacobian(F):
     n = len(F)
+
     def J(X):
-        J_FLAT=[]
+        J_FLAT = []
         for f in F:
             for var in range(n):
                 J_FLAT.append(partial(f, X, var))
@@ -28,43 +31,53 @@ def NewtonRaphson_ND(F, X, tol=1E-15):
     # X as column matrix
     X = np.array(X).reshape(n, 1)
 
-    vec_F = lambda X: np.array([f(*X[:,0]) for f in F]).reshape(n, 1)
+    def vec_F(X): return np.array([f(*X[:, 0]) for f in F]).reshape(n, 1)
     F_return = vec_F(X)
 
     while (np.abs(F_return) > tol).any():
-        X -= np.dot(np.linalg.inv(J(np.copy(X[:,0]))), F_return)
+        X -= np.dot(np.linalg.inv(J(np.copy(X[:, 0]))), F_return)
         F_return = vec_F(X)
 
     return X.reshape(n)
+
 
 def rootChecker(F, root):
     for i, f in enumerate(F):
         print('f{}({}) = {}'.format(1 + i, root, f(*root)))
     return 0
 
+
 def printFunctions(F):
     for f in F:
         print(inspect.getsource(f))
 
+
 print('##########################################################################')
 print('# c')
 
-f1 = lambda x, y: (x ** 2) + (y ** 2) - 1
-f2 = lambda x, y: (y ** 2) - (4 * x)
+
+def f1(x, y): return (x ** 2) + (y ** 2) - 1
+def f2(x, y): return (y ** 2) - (4 * x)
+
+
 F = [f1, f2]
 printFunctions(F)
 
-Guess=[0.5, 0.5]
+Guess = [0.5, 0.5]
 X = NewtonRaphson_ND(F, Guess)
-print('guess =', Guess); print('root =', X)
-rootChecker(F, X); print()
+print('guess =', Guess)
+print('root =', X)
+rootChecker(F, X)
+print()
 
 print('##########################################################################')
 print('# d')
 
 a = 1 + 1j
-f1 = lambda x, y: np.real(((x + 1j * y) ** n) - a)
-f2 = lambda x, y: np.imag(((x + 1j * y) ** n) - a)
+def f1(x, y): return np.real(((x + 1j * y) ** n) - a)
+def f2(x, y): return np.imag(((x + 1j * y) ** n) - a)
+
+
 F = [f1, f2]
 printFunctions(F)
 
@@ -74,15 +87,19 @@ print('Analytical Solution(s) for n=2:')
 print('\t2^0.25 * e^{1j * (pi/8)}   ~= +1.09868 + 1j * 0.45508')
 print('\t2^0.25 * e^{1j * (9*pi/8)} ~= -1.09868 - 1j * 0.45508\n')
 
-Guess=[+1, +0.4]
+Guess = [+1, +0.4]
 X = NewtonRaphson_ND(F, Guess)
-print('guess =', Guess, '(n = {})'.format(n)); print('root =', X)
-rootChecker(F, X); print()
+print('guess =', Guess, '(n = {})'.format(n))
+print('root =', X)
+rootChecker(F, X)
+print()
 
-Guess=[-1, -0.4]
+Guess = [-1, -0.4]
 X = NewtonRaphson_ND(F, Guess)
-print('guess =', Guess, '(n = {})'.format(n)); print('root =', X)
-rootChecker(F, X); print()
+print('guess =', Guess, '(n = {})'.format(n))
+print('root =', X)
+rootChecker(F, X)
+print()
 
 # for n = 3
 n = 3
@@ -91,41 +108,55 @@ print('\t2^(1/6) * e^{1j * (pi/12)}    ~= +1.08421 + 1j * 0.29051')
 print('\t2^(1/6) * e^{1j * (9*pi/12)}  ~= -0.79370 + 1j * 0.79370')
 print('\t2^(1/6) * e^{1j * (17*pi/12)} ~= -0.29051 - 1j * 1.08421\n')
 
-Guess=[+1, +0.3]
+Guess = [+1, +0.3]
 X = NewtonRaphson_ND(F, Guess)
-print('guess =', Guess, '(n = {})'.format(n)); print('root =', X)
-rootChecker(F, X); print()
+print('guess =', Guess, '(n = {})'.format(n))
+print('root =', X)
+rootChecker(F, X)
+print()
 
-Guess=[-0.7, +0.7]
+Guess = [-0.7, +0.7]
 X = NewtonRaphson_ND(F, Guess)
-print('guess =', Guess, '(n = {})'.format(n)); print('root =', X)
-rootChecker(F, X); print()
+print('guess =', Guess, '(n = {})'.format(n))
+print('root =', X)
+rootChecker(F, X)
+print()
 
-Guess=[-0.3, -1]
+Guess = [-0.3, -1]
 X = NewtonRaphson_ND(F, Guess)
-print('guess =', Guess, '(n = {})'.format(n)); print('root =', X)
-rootChecker(F, X); print()
+print('guess =', Guess, '(n = {})'.format(n))
+print('root =', X)
+rootChecker(F, X)
+print()
 
 print('##########################################################################')
 print('# e')
 
-f1 = lambda x, y: np.real(np.cosh(x + 1j * y))
-f2 = lambda x, y: np.imag(np.cosh(x + 1j * y))
+
+def f1(x, y): return np.real(np.cosh(x + 1j * y))
+def f2(x, y): return np.imag(np.cosh(x + 1j * y))
+
+
 F = [f1, f2]
 printFunctions(F)
 
 print('Analytical Solution(s):')
-print('\tcosh(z) = 0 => e^{2z} = -1 => z = 0 + 1j * (pi/2 + k * pi); k is a int\n')
+print(
+    '\tcosh(z) = 0 => e^{2z} = -1 => z = 0 + 1j * (pi/2 + k * pi); k is a int\n')
 
-Guess=[0, 4.0]
+Guess = [0, 4.0]
 X = NewtonRaphson_ND(F, Guess)
-print('guess =', Guess); print('root =', X)
-rootChecker(F, X); print()
+print('guess =', Guess)
+print('root =', X)
+rootChecker(F, X)
+print()
 
-Guess=[0, 7.0]
+Guess = [0, 7.0]
 X = NewtonRaphson_ND(F, Guess)
-print('guess =', Guess); print('root =', X)
-rootChecker(F, X); print()
+print('guess =', Guess)
+print('root =', X)
+rootChecker(F, X)
+print()
 
 """
 OUTPUT

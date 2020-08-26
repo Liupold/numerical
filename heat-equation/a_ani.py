@@ -1,24 +1,25 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from  matplotlib.animation import FuncAnimation
+from matplotlib.animation import FuncAnimation
 from threading import Thread
 from time import time, sleep
+
 
 def __func_iter(data_mat, del_x, del_y):
     new_data_mat = np.copy(data_mat)
 
-    for i in range(1, data_mat.shape[0]-1):
-        for j in range(1, data_mat.shape[1]-1):
-            val  = (del_y ** 2) * (data_mat[i + 1, j] + data_mat[i - 1, j])
+    for i in range(1, data_mat.shape[0] - 1):
+        for j in range(1, data_mat.shape[1] - 1):
+            val = (del_y ** 2) * (data_mat[i + 1, j] + data_mat[i - 1, j])
             val += (del_x ** 2) * (data_mat[i, j + 1] + data_mat[i, j - 1])
             val /= 2 * (del_x ** 2 + del_y ** 2)
             new_data_mat[i, j] = val
     return new_data_mat
 
 
-def solve_lp_rect(boundary_conds: tuple, Lx, Ly, \
-         del_x=1, del_y=1, accuracy=1E-2):
-    global data_mat, iter_n, acc # remove this if not using animation
+def solve_lp_rect(boundary_conds: tuple, Lx, Ly,
+                  del_x=1, del_y=1, accuracy=1E-2):
+    global data_mat, iter_n, acc  # remove this if not using animation
     """
     Solves laplacian eqn in a rect boundary.
     ---------------------------------------
@@ -42,9 +43,9 @@ def solve_lp_rect(boundary_conds: tuple, Lx, Ly, \
 
     data_mat = np.zeros((x_divs.shape[0], y_divs.shape[0]))
     data_mat[:, 0] = np.vectorize(boundary_conds[0])(x_divs)
-    data_mat[:,-1] = np.vectorize(boundary_conds[1])(x_divs)
-    data_mat[ 0,:] = np.vectorize(boundary_conds[2])(y_divs)
-    data_mat[-1,:] = np.vectorize(boundary_conds[3])(y_divs)
+    data_mat[:, -1] = np.vectorize(boundary_conds[1])(x_divs)
+    data_mat[0, :] = np.vectorize(boundary_conds[2])(y_divs)
+    data_mat[-1, :] = np.vectorize(boundary_conds[3])(y_divs)
 
     acc = np.inf
     last_pritnted = time()
@@ -70,15 +71,15 @@ del_x = 1
 del_y = 1
 accuracy = 1E-4
 
-main_th = Thread(target=solve_lp_rect, \
-        args=(boundary_conds, Lx, Ly, del_x, del_y, accuracy),\
-        daemon=True)
+main_th = Thread(target=solve_lp_rect,
+                 args=(boundary_conds, Lx, Ly, del_x, del_y, accuracy),
+                 daemon=True)
 main_th.start()
 # same as:
 # data_mat = solve_lp_rect(boundary_conds, Lx, Ly, del_x, del_y, accuracy)
 
 # Plot related config
-sleep_after_draw = 0 # 0 will skip (for smooth animation)
+sleep_after_draw = 0  # 0 will skip (for smooth animation)
 fig = plt.figure()
 fig.set_size_inches(12, 6)
 
@@ -87,13 +88,15 @@ plt.colorbar(plot, orientation='vertical')
 plt.gca().xaxis.tick_bottom()
 plt.gca().invert_yaxis()
 
+
 def update(*args):
     plot.set_data(data_mat.T)
-    status ="Accuracy achieved: {:.2}% (After {} iteration)".\
-            format(accuracy/acc*100, iter_n)
+    status = "Accuracy achieved: {:.2}% (After {} iteration)".\
+        format(accuracy / acc * 100, iter_n)
     print(status, end='\r')
     plt.title(status)
-    return [plot,]
+    return [plot, ]
+
 
 ani = FuncAnimation(fig, update, interval=167)
 #ani.save('animation.gif', writer='imagemagick')

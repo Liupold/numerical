@@ -8,12 +8,12 @@ import numpy as np
 
 def pivot_sort(A, i):
     changed = False
-    col = list(A[:,i][i:])
+    col = list(A[:, i][i:])
     col = [abs(i) for i in col]
     swp_index = (col.index(max(col))) + i
     A[[i, swp_index]] = A[[swp_index, i]]
     if i != swp_index:
-        changed =True
+        changed = True
     return A, changed
 
 
@@ -38,12 +38,14 @@ def get_x_array(C):
         x_arr[i] = (C[i][N] - np.sum(C[i][i + 1:N] * x_arr[i + 1:N])) / C[i][i]
     return x_arr
 
+
 def get_det(matrix, pcount):
     N = len(matrix)
     det = (-1) ** pcount
     for i in range(N):
         det *= matrix[i][i]
     return det
+
 
 def SolveByG_Elemination(matrix_A, matrix_B):
     N = len(matrix_A)
@@ -56,6 +58,7 @@ def SolveByG_Elemination(matrix_A, matrix_B):
     else:
         X_array = []
     return X_array, C, det
+
 
 if __name__ == '__main__':
     A = np.array(eval(input("Enter A matrix: ")))

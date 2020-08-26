@@ -7,15 +7,17 @@ np.ALLOW_THREADS = 1
 # A = np.array([[2, 4, -6], [1, 3, 1], [2, -4, -2]])
 # B = np.array([-8, 10, -12])
 
+
 def pivot_sort(A, i):
     changed = False
-    col = list(A[:,i][i:])
+    col = list(A[:, i][i:])
     col = [abs(i) for i in col]
     swp_index = (col.index(max(col))) + i
     A[[i, swp_index]] = A[[swp_index, i]]
     if i != swp_index:
         changed = True
     return A, changed
+
 
 def diagonalize(A):
     N = len(A)
@@ -30,13 +32,15 @@ def diagonalize(A):
                 A[j] = A[j] - factor * A[i]
     return A, pcount
 
+
 def get_x_array(A):
     # from diagonalize matrix
     N = len(A)
     x_arr = []
     for i, row in enumerate(A):
-        x_arr.append(row[N]/row[i])
+        x_arr.append(row[N] / row[i])
     return x_arr
+
 
 def get_det(matrix, pcount):
     N = len(matrix)
@@ -45,18 +49,20 @@ def get_det(matrix, pcount):
         det *= matrix[i][i]
     return det
 
+
 def get_inverse(A):
     N = len(A)
-    arg_mat = np.zeros((N,2*N))
+    arg_mat = np.zeros((N, 2 * N))
     for i in range(N):
-        arg_mat[i, N + i]= 1
+        arg_mat[i, N + i] = 1
     arg_mat[:, 0:N] = A
     arg_mat, _ = diagonalize(arg_mat)
 
     for i in range(N):
         arg_mat[i] = arg_mat[i] / arg_mat[i, i]
 
-    return arg_mat[:, N:2*N]
+    return arg_mat[:, N:2 * N]
+
 
 def SolveByGaussJordan(matrix_A, matrix_B):
     N = len(A)
@@ -70,6 +76,7 @@ def SolveByGaussJordan(matrix_A, matrix_B):
         print("Determinant is zero can't solve this system")
         X_array = []
     return X_array, C, det
+
 
 if __name__ == '__main__':
     A = np.array(eval(input("Enter Matrix A: ")))

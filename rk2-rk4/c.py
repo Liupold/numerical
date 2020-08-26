@@ -5,8 +5,9 @@ import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
-def SolveByRK4_O2(f1_dash, f2_dash, t0:float, \
-        x0:float, x0_dash:float, tn: float, h=0.1):
+
+def SolveByRK4_O2(f1_dash, f2_dash, t0: float,
+                  x0: float, x0_dash: float, tn: float, h=0.1):
     """
     This function solves a differential eqn using
     Runge Kutta 4 method (for order 2).
@@ -16,7 +17,7 @@ def SolveByRK4_O2(f1_dash, f2_dash, t0:float, \
     x_array = np.zeros(N + 1)
     x_dash_array = np.zeros(N + 1)
 
-    t_array[0], x_array[0], x_dash_array[0] = t, x, v  = t0, x0, x0_dash
+    t_array[0], x_array[0], x_dash_array[0] = t, x, v = t0, x0, x0_dash
 
     for i in range(1, N + 1):
         k_1x = f1_dash(t, x, v)
@@ -31,16 +32,16 @@ def SolveByRK4_O2(f1_dash, f2_dash, t0:float, \
         k_4x = f1_dash(t + h, x + h * k_3x, v + h * k_3v)
         k_4v = f2_dash(t + h, x + h * k_3x, v + h * k_3v)
 
-        x = x + (h/6) * (k_1x + 2 * k_2x + 2 * k_3x + k_4x)
-        v = v + (h/6) * (k_1v + 2 * k_2v + 2 * k_3v + k_4v)
+        x = x + (h / 6) * (k_1x + 2 * k_2x + 2 * k_3x + k_4x)
+        v = v + (h / 6) * (k_1v + 2 * k_2v + 2 * k_3v + k_4v)
         t += h
         t_array[i], x_array[i], x_dash_array[i] = t, x, v
 
     return t_array, x_array, x_dash_array
 
 
-def SolveByEulers_O2(f1_dash, f2_dash, t0:float, x0:float,\
-        x0_dash:float, tn: float, h=0.1):
+def SolveByEulers_O2(f1_dash, f2_dash, t0: float, x0: float,
+                     x0_dash: float, tn: float, h=0.1):
     """
     This function solves a differential eqn using
     Euler's Method. (for order 2)
@@ -50,7 +51,7 @@ def SolveByEulers_O2(f1_dash, f2_dash, t0:float, x0:float,\
     x_array = np.zeros(N + 1)
     x_dash_array = np.zeros(N + 1)
 
-    t_array[0], x_array[0], x_dash_array[0] = t, x, v  = t0, x0, x0_dash
+    t_array[0], x_array[0], x_dash_array[0] = t, x, v = t0, x0, x0_dash
 
     for i in range(1, N + 1):
         f1, f2 = f1_dash(t, x, v), f2_dash(t, x, v)
@@ -60,24 +61,33 @@ def SolveByEulers_O2(f1_dash, f2_dash, t0:float, x0:float,\
         t_array[i], x_array[i], x_dash_array[i] = t, x, v
     return t_array, x_array, x_dash_array
 
+
 # system specification
-m = 1 # unit mass
+m = 1  # unit mass
 k = np.pi ** 2
 
 # differential eqns
-x_dot = lambda t, x, v: v
-v_dot = lambda t, x, v: -(k / m) * x
+
+
+def x_dot(t, x, v): return v
+def v_dot(t, x, v): return -(k / m) * x
+
 
 # initial condition
-t0 = 0; x0 = 1; v0 = 0
+t0 = 0
+x0 = 1
+v0 = 0
 
 # exact analytical solution
-fn_x = lambda t: x0 * np.cos(np.sqrt(k/m) * t)
-fn_v = lambda t: -np.sqrt(k/m) * x0 * np.sin(np.sqrt(k/m) * t)
+
+
+def fn_x(t): return x0 * np.cos(np.sqrt(k / m) * t)
+def fn_v(t): return -np.sqrt(k / m) * x0 * np.sin(np.sqrt(k / m) * t)
 
 
 # calculation limit
-tn = 10; dt = 0.02
+tn = 10
+dt = 0.02
 
 
 # exact calculation
@@ -86,11 +96,11 @@ x_array_ex = fn_x(t_array_ex)
 v_array_ex = fn_v(t_array_ex)
 
 # eulers calculation
-t_array_eu, x_array_eu, v_array_eu = SolveByEulers_O2(x_dot, \
-                                    v_dot, t0, x0, v0, tn, h=dt)
+t_array_eu, x_array_eu, v_array_eu = SolveByEulers_O2(x_dot,
+                                                      v_dot, t0, x0, v0, tn, h=dt)
 # rk4 calculation
-t_array_rk, x_array_rk, v_array_rk = SolveByRK4_O2(x_dot, \
-                                    v_dot, t0, x0, v0, tn, h=dt)
+t_array_rk, x_array_rk, v_array_rk = SolveByRK4_O2(x_dot,
+                                                   v_dot, t0, x0, v0, tn, h=dt)
 
 with PdfPages('plot_c.pdf') as pdf:
 
